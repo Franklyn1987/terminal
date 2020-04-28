@@ -5,6 +5,11 @@ Write-Output "constexpr std::wstring_view CurrentCommitHash{ L`"" | Out-File -Fi
 
 # Let's see if we're on a build agent that can give us the commit hash.
 $hash = $env:Build_SourceVersion
+if ($hash)
+{
+    Write-Output $hash
+}
+
 if (-not $hash)
 {
     $hash = git rev-parse HEAD
@@ -13,8 +18,6 @@ if (-not $hash)
         $hash = "master"
     }
 }
-
-Write-Output $hash
 
 $hash | Out-File -FilePath "Generated Files\CurrentCommitHash.h" -Encoding ASCII -Append -NoNewline
 Write-Output "`" };" | Out-File -FilePath "Generated Files\CurrentCommitHash.h" -Encoding ASCII -Append -NoNewline
